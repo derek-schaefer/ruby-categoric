@@ -36,8 +36,8 @@ describe Categoric::Maybe do
   end
 
   describe '.any?' do
-    it { expect(Maybe(42).any?).to be true }
-    it { expect(Maybe(nil).any?).to be false }
+    it { expect(Just(42).any?).to be true }
+    it { expect(Nothing().any?).to be false }
   end
 
   describe '.empty?' do

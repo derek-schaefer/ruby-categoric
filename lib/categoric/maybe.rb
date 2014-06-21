@@ -5,11 +5,8 @@ module Categoric
 
     # TODO: join if Nothing
     def self.from(value)
-      if value.nil?
-        Nothing.new
-      else
-        Just.join value
-      end
+      if value.nil? then Nothing.new
+      else Just.join value end
     end
   end
 

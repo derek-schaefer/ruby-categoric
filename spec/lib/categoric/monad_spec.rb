@@ -35,12 +35,12 @@ describe Categoric::Monad do
   end
 
   describe '.bind' do
-    it { expect(Identity.new(1).bind(->(n) { n * 2 })).to eq Identity.new(nil) }
+    it { expect(Identity.new(1).bind(->(n) { n * 2 })).to eq Identity.new(1) }
     it { expect(Identity.new(nil).bind(->(n) { n * 2 })).to eq Identity.new(nil) }
   end
 
   describe '.>>' do
-    it { expect(Identity.new(1) >> ->(n) { n * 2 }).to eq Identity.new(nil) }
+    it { expect(Identity.new(1) >> ->(n) { n * 2 }).to eq Identity.new(1) }
     it { expect(Identity.new(nil) >> ->(n) { n * 2 }).to eq Identity.new(nil) }
   end
 

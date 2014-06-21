@@ -34,10 +34,9 @@ module Categoric
       !self.any?
     end
 
-    # Privileged access to the boxed value
-    def bind(proc = nil, &block)
-      f = (proc || block)
-      self.class.from((f.call(@value) unless self.nil_or_empty?))
+    # Transform the boxed value
+    def bind(f = nil, &block)
+      self.class.from((self.nil_or_empty? ? @value : (f || block).call(@value)))
     end
 
     alias :>> :bind
