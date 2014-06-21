@@ -1,20 +1,28 @@
 module Categoric
   module Monad
-    def initialize(value = nil)
-      @value =
-        if value.is_a? self.class then other._
-        else value end
+    module ClassMethods
+      # Create a new monad with the value
+      def from(value)
+        self.join value
+      end
+
+      # Combine monads of the same type
+      def join(other)
+        self.new(other.class <= self ? other._ : other)
+      end
     end
 
     # Create a new monad with the value
-    def self.from(value)
-      self.class.new value
+    def initialize(value = nil)
+      @value = value
     end
 
     # Extract the boxed value
-    def _
+    def extract
       @value
     end
+
+    alias :_ :extract
 
     # Does the monad contain a value?
     def any?
@@ -28,29 +36,11 @@ module Categoric
 
     # Privileged access to the boxed value
     def bind(proc = nil, &block)
-      (proc || block).call self._
-    end
-
-    # Map the value to a new monad with the given function
-    def map(proc = nil, &block)
       f = (proc || block)
       self.class.from((f.call(@value) unless self.nil_or_empty?))
     end
 
-    # Map the value's contents to a new monad with the given
-    # function, while eliminating empty results.
-    def fmap(proc = nil, &block)
-      f = (proc || block)
-
-      vs =
-        if @value.respond_to? :map
-          @value.map do |v|
-            self.class.from(f.call(v)) unless self.nil_or_empty?(v)
-          end
-        end
-
-      self.class.from vs
-    end
+    alias :>> :bind
 
     # Monad type and value comparison
     def ==(other)
@@ -70,10 +60,7 @@ module Categoric
 
     # Basic string representation
     def to_s
-      s = ''
-      s << self.name
-      s << "(#{@value.inspect})" if @value
-      s
+      "#{self.name}(#{@value})"
     end
 
     protected

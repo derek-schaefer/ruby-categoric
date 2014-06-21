@@ -1,12 +1,13 @@
 module Categoric
   class Try
     include Monad
+    extend  Monad::ClassMethods
 
     def self.from(value)
       if value.nil? || value.is_a?(StandardError)
-        Failure.new value
+        Failure.join value
       else
-        Success.new value
+        Success.join value
       end
     end
   end
@@ -27,9 +28,18 @@ module Categoric
     f = (proc || block)
 
     begin
-      Success.new f.call
+      Try.from f.call
     rescue => e
-      Failure.new e
+      Try.from e
     end
   end
+
+  def Success(value)
+    Success.join value
+  end
+
+  def Failure(value)
+    Failure.join value
+  end
+
 end

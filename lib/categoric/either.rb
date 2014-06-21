@@ -4,8 +4,8 @@ module Categoric
 
     def self.from(side, value)
       case side
-      when :right then Right.new value
-      when :left then Left.new value
+      when :right then Right.join value
+      when :left then Left.join value
       else raise "Invalid side: #{side}"
       end
     end
@@ -26,6 +26,6 @@ module Categoric
   def Either(predicate, value = nil, &block)
     v = block ? block.call : value
     side = predicate.call v
-    Either.from side, v
+    Either.join side, v
   end
 end
