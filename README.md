@@ -1,6 +1,6 @@
 # Categoric [![Build Status](https://secure.travis-ci.org/derek-schaefer/ruby-categoric.png?branch=master)](http://travis-ci.org/derek-schaefer/ruby-categoric)
 
-Adds some monadic flavor to Ruby for fun and profit.
+Add some monadic flavor to Ruby for fun and profit.
 
 NOTE: Still an early work in progress.
 
@@ -15,11 +15,17 @@ Maybe(nil) == Nothing()
 Maybe(42) >> ->(n) { n * 2 } == Just(84)
 Maybe(nil) >> ->(n) { n * 2 } == Nothing()
 
+Maybe(42) * 2 + 1 == Just(85)
+Maybe(nil) * 2 + 1 == Nothing()
+
 Try(->{ 1 + 1 }) == Success(2)
-Try(->{ 1 + nil }) == Failure(TypeError("nil can't be coerced into Fixnum"))
+Try(->{ 1 + nil }) == Failure(TypeError.new)
 
 Try(->{ 1 + 1 }) >> ->(n) { n + 1 } == Success(3)
-Try(->{ 1 + nil }) >> ->(n) { n + 1 } == Failure()
+Try(->{ 1 + nil }) >> ->(n) { n + 1 } == Failure(TypeError.new)
+
+Try(->{ 1 + 1 }) * 2 + 1 == Success(5)
+Try(->{ 1 + nil }) * 2 + 1 == Failure(TypeError.new)
 
 p = ->(n) { n > 0 : :right : :left }
 Either(p, 42) == Right(42)

@@ -41,6 +41,11 @@ module Categoric
 
     alias :>> :bind
 
+    # Send other method calls to the boxed value via bind
+    def method_missing(m, *args)
+      self.bind { |v| v.__send__(m, *args) }
+    end
+
     # Monad type and value comparison
     def ==(other)
       other.is_a?(self.class) && other._ == @value

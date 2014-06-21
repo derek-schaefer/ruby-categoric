@@ -44,6 +44,11 @@ describe Categoric::Monad do
     it { expect(Identity.new(nil) >> ->(n) { n * 2 }).to eq Identity.new(nil) }
   end
 
+  describe '.method_missing' do
+    it { expect(Identity.new(1) * 2).to eq Identity.new(1) }
+    it { expect(Identity.new(nil) * 2).to eq Identity.new(nil) }
+  end
+
   describe '.==' do
     it { expect(Identity.new(1) == Identity.new(1)).to be true }
     it { expect(Identity.new(1) == Identity.new(2)).to be false }

@@ -63,6 +63,13 @@ describe Categoric::Try do
     it { expect(Try(->{ 1 + 1 }) >> ->(n) { Try(->{ n + nil }) }).to eq Failure(TypeError.new) }
   end
 
+  describe '.method_missing' do
+    it { expect(Try(2) + 2).to eq Success(4) }
+    it { expect(Try(->{ 1 + nil }) + 2).to eq Failure(TypeError.new) }
+    it { expect(Try(->{ 1 + 1 }) * 2 + 2).to eq Success(6) }
+    it { expect(Try(->{ 1 + nil }) + 2 + 1).to eq Failure(TypeError.new) }
+  end
+
   describe '.==' do
     it { expect(Try(2) == Success(2)).to be true }
     it { expect(Try(2) == Success(3)).to be false }

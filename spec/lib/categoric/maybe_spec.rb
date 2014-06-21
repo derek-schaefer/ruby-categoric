@@ -48,11 +48,22 @@ describe Categoric::Maybe do
   describe '.bind' do
     it { expect(Maybe(nil).bind(->(n) { n * 2 })).to eq Nothing() }
     it { expect(Maybe(123).bind(->(n) { n * 2 })).to eq Just(246) }
+    it { expect(Maybe(nil).bind(->(n) { n * 2 }).bind(->(n) { n + 2 })).to eq Nothing() }
+    it { expect(Maybe(123).bind(->(n) { n * 2 }).bind(->(n) { n + 2 })).to eq Just(248) }
   end
 
   describe '.>>' do
-    it { expect(Maybe(nil) >> (->(n) { n * 2 })).to eq Nothing() }
-    it { expect(Maybe(123) >> (->(n) { n * 2 })).to eq Just(246) }
+    it { expect(Maybe(nil) >> ->(n) { n * 2 }).to eq Nothing() }
+    it { expect(Maybe(123) >> ->(n) { n * 2 }).to eq Just(246) }
+    it { expect(Maybe(nil) >> ->(n) { n * 2 } >> ->(n) { n + 2 }).to eq Nothing() }
+    it { expect(Maybe(123) >> ->(n) { n * 2 } >> ->(n) { n + 2 }).to eq Just(248) }
+  end
+
+  describe '.method_missing' do
+    it { expect(Maybe(nil) * 2).to eq Nothing() }
+    it { expect(Maybe(123) * 2).to eq Just(246) }
+    it { expect(Maybe(nil) * 2 + 2).to eq Nothing() }
+    it { expect(Maybe(123) * 2 + 2).to eq Just(248) }
   end
 
   describe '.==' do

@@ -1,6 +1,7 @@
 module Categoric
   class Either
     include Monad
+    extend  Monad::ClassMethods
 
     def self.from(side, value)
       case side
@@ -24,8 +25,7 @@ module Categoric
   end
 
   def Either(predicate, value = nil, &block)
-    v = block ? block.call : value
-    side = predicate.call v
-    Either.join side, v
+    nvalue = block ? block.call : value
+    Either.join(predicate.call nvalue, nvalue)
   end
 end
