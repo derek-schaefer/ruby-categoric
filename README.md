@@ -12,6 +12,9 @@ require 'categoric'
 Maybe(42) == Just(42)
 Maybe(nil) == Nothing()
 
+Maybe(42)._ == 42
+Maybe(nil)._ == nil
+
 Maybe(42) >> ->(n) { n * 2 } == Just(84)
 Maybe(nil) >> ->(n) { n * 2 } == Nothing()
 
@@ -20,6 +23,9 @@ Maybe(nil) * 2 + 1 == Nothing()
 
 Try(->{ 1 + 1 }) == Success(2)
 Try(->{ 1 + nil }) == Failure(TypeError.new)
+
+Try(->{ 1 + 1 })._ == 2
+Try(->{ 1 + nil })._ == TypeError.new
 
 Try(->{ 1 + 1 }) >> ->(n) { n + 1 } == Success(3)
 Try(->{ 1 + nil }) >> ->(n) { n + 1 } == Failure(TypeError.new)
