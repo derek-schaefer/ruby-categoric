@@ -1,4 +1,4 @@
-# Categoric
+# Categoric [![Build Status](https://secure.travis-ci.org/derek-schaefer/ruby-categoric.png?branch=master)](http://travis-ci.org/derek-schaefer/ruby-categoric)
 
 Adds some monadic flavor to Ruby for fun and profit.
 
