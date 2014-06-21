@@ -33,7 +33,7 @@ Try(->{ 1 + nil }) >> ->(n) { n + 1 } == Failure(TypeError.new)
 Try(->{ 1 + 1 }) * 2 + 1 == Success(5)
 Try(->{ 1 + nil }) * 2 + 1 == Failure(TypeError.new)
 
-p = ->(n) { n > 0 : :right : :left }
+p = ->(n) { n > 0 }
 Either(p, 42) == Right(42)
 Either(p, -7) == Left(-7)
 Either(p) { 123 } == Right(123)
