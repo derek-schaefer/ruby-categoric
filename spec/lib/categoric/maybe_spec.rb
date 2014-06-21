@@ -8,10 +8,12 @@ describe Categoric::Maybe do
 
   describe '#Just' do
     it { expect(Just 42).to eq Just(42) }
+    it { expect(Just Just(42)).to eq Just(42) }
   end
 
   describe '#Nothing' do
-    it { expect(Nothing()).to be_an_instance_of Nothing }
+    it { expect(Nothing()).to eq Nothing() }
+    it { expect(Nothing(Nothing())).to eq Nothing() }
   end
 
   describe '#from' do

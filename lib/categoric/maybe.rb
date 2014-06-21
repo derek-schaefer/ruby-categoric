@@ -30,7 +30,7 @@ module Categoric
     Just.join value
   end
 
-  def Nothing
+  def Nothing(value = nil)
     Nothing.new
   end
 end

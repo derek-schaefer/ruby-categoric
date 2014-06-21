@@ -4,11 +4,8 @@ module Categoric
     extend  Monad::ClassMethods
 
     def self.from(side, value)
-      case side
-      when :right then Right.join value
-      when :left then Left.join value
-      else raise "Invalid side: #{side}"
-      end
+      if side then Right.join value
+      else Left.join value end
     end
   end
 
@@ -26,6 +23,14 @@ module Categoric
 
   def Either(predicate, value = nil, &block)
     nvalue = block ? block.call : value
-    Either.join(predicate.call nvalue, nvalue)
+    Either.from(predicate.call(nvalue), nvalue)
+  end
+
+  def Right(value = nil)
+    Right.join value
+  end
+
+  def Left(value = nil)
+    Left.join value
   end
 end
