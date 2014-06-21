@@ -12,14 +12,14 @@ require 'categoric'
 Maybe(42) == Just(42)
 Maybe(nil) == Nothing()
 
-Maybe(42) >> { |n| n * 2 } == Just(84)
-Maybe(nil) >> { |n| n * 2 } == Nothing()
+Maybe(42) >> ->(n) { n * 2 } == Just(84)
+Maybe(nil) >> ->(n) { n * 2 } == Nothing()
 
 Try(->{ 1 + 1 }) == Success(2)
 Try(->{ 1 + nil }) == Failure(TypeError("nil can't be coerced into Fixnum"))
 
-Try(->{ 1 + 1 }) >> { |n| n + 1 } == Success(3)
-Try(->{ 1 + nil }) >> { |n| n + 1 } == Failure()
+Try(->{ 1 + 1 }) >> ->(n) { n + 1 } == Success(3)
+Try(->{ 1 + nil }) >> ->(n) { n + 1 } == Failure()
 
 p = ->(n) { n > 0 : :right : :left }
 Either(p, 42) == Right(42)
