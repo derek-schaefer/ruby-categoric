@@ -1,9 +1,18 @@
 require 'spec_helper'
 
 describe Categoric::Maybe do
+  def match_class(m)
+    case m
+    when Just then :just
+    when Nothing then :nothing
+    end
+  end
+
   describe 'Maybe' do
     it { expect(Maybe 123).to eq Just(123) }
     it { expect(Maybe nil).to eq Nothing() }
+    it { expect(match_class Maybe 123).to eq :just }
+    it { expect(match_class Maybe nil).to eq :nothing }
   end
 
   describe 'Just' do
@@ -20,7 +29,7 @@ describe Categoric::Maybe do
     it { expect(Maybe.from nil).to eq Nothing() }
     it { expect(Maybe.from 123).to eq Just(123) }
     it { expect(Maybe.from Just(42)).to eq Just(42) }
-    #it { expect(Maybe.from Nothing()).to eq Nothing() }
+    it { expect(Maybe.from Nothing()).to eq Nothing() }
   end
 
   describe '#extract' do
@@ -45,6 +54,16 @@ describe Categoric::Maybe do
   describe '#empty?' do
     it { expect(Maybe(42).empty?).to be false }
     it { expect(Maybe(nil).empty?).to be true }
+  end
+
+  describe '#just?' do
+    it { expect(Just(42).just?).to be true }
+    it { expect(Nothing().just?).to be false }
+  end
+
+  describe '#nothing?' do
+    it { expect(Maybe(42).nothing?).to be false }
+    it { expect(Maybe(nil).nothing?).to be true }
   end
 
   describe '#bind' do

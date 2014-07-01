@@ -3,24 +3,29 @@ module Categoric
     include Monad
     extend  Monad::ClassMethods
 
-    # TODO: join if Nothing
     def self.from(value)
-      if value.nil? then Nothing.new
-      else Just.join value end
+      if value.nil? || value.is_a?(Nothing)
+        Nothing.new
+      else
+        Just.join value
+      end
+    end
+
+    def just?
+      self.is_a? Just
+    end
+
+    def nothing?
+      self.is_a? Nothing
+    end
+
+    def any?
+      self.just?
     end
   end
 
-  class Just < Maybe
-    def any?
-      true
-    end
-  end
-
-  class Nothing < Maybe
-    def any?
-      false
-    end
-  end
+  class Just < Maybe; end
+  class Nothing < Maybe; end
 
   def Maybe(value)
     Maybe.from value
