@@ -34,10 +34,19 @@ Try(->{ 1 + 1 }) * 2 + 1 == Success(5)
 Try(->{ 1 + nil }) * 2 + 1 == Failure(TypeError.new)
 
 p = ->(n) { n > 0 }
+
 Either(p, 42) == Right(42)
 Either(p, -7) == Left(-7)
-Either(p) { 123 } == Right(123)
-Either(p) { -10 } == Left(-10)
+
+e = Either(p)
+e.call(123) == Right(123)
+e.call(-10) == Left(-10)
+
+Either(p, 42).right(->(n) { n * 2 }) == Right(84)
+Either(p, -7).right(->(n) { n * 2 }) == Left(-7)
+
+Either(p, 42) * 2 == Right(84)
+Either(p, -7) + 8 == Right(1)
 ```
 
 ## License
