@@ -36,7 +36,7 @@ module Categoric
 
     # Transform the boxed value
     def bind(f = nil, &block)
-      self.class.from((self.nil_or_empty? ? @value : (f || block).call(@value)))
+      self.class.from self._bind((f || block))
     end
 
     alias :>> :bind
@@ -68,6 +68,11 @@ module Categoric
     end
 
     protected
+
+    # Perform internal check on bind
+    def _bind(f)
+      (self.nil_or_empty? ? @value : f.call(@value))
+    end
 
     # Attempt to call any? on other
     def try_any?(other)

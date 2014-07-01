@@ -41,7 +41,24 @@ describe Categoric::Either do
   end
 
   describe '#any?' do
-    it { expect(Either(->(n) { n > 0 }, 2).right?).to be true }
-    it { expect(Either(->(n) { n > 0 }, -2).right?).to be false }
+    it { expect(Either(->(n) { n > 0 }, 2).any?).to be true }
+    it { expect(Either(->(n) { n > 0 }, -2).any?).to be true }
+  end
+
+  describe '#right' do
+    it { expect(Either(->(n) { n > 0 }, 2).right(->(n) { n * 2 })).to eq Right(4) }
+    it { expect(Either(->(n) { n > 0 }, -2).right(->(n) { n * 2 })).to eq Left(-2) }
+  end
+
+  describe '#left' do
+    it { expect(Either(->(n) { n > 0 }, 2).left(->(n) { n * 2 })).to eq Right(2) }
+    it { expect(Either(->(n) { n > 0 }, -2).left(->(n) { n * 2 })).to eq Left(-4) }
+  end
+
+  describe '#method_missing' do
+    it { expect(Either(->(n) { n > 0 }, 2) * 2).to eq Right(4) }
+    it { expect(Either(->(n) { n > 0 }, 2) - 2).to eq Left(0) }
+    it { expect(Either(->(n) { n > 0 }, -2) * 2).to eq Left(-4) }
+    it { expect(Either(->(n) { n > 0 }, -2) + 3).to eq Right(1) }
   end
 end

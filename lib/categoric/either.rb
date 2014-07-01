@@ -3,9 +3,15 @@ module Categoric
     include Monad
     extend  Monad::ClassMethods
 
-    def self.from(side, value)
-      if side then Right.join value
-      else Left.join value end
+    def self.from(predicate, value = nil, &block)
+      if value || block
+        nvalue = block ? block.call : value
+        side = (predicate.call(nvalue) ? Right : Left).join nvalue
+        side.predicate = predicate
+        side
+      else
+        ->(value = nil, &block) { Either(predicate, value, &block) }
+      end
     end
 
     def right?
@@ -17,7 +23,23 @@ module Categoric
     end
 
     def any?
-      self.right?
+      true
+    end
+
+    def right(f = nil, &block)
+      (self.right? ? self.bind(f, &block) : self)
+    end
+
+    def left(f = nil, &block)
+      (self.left? ? self.bind(f, &block) : self)
+    end
+
+    def predicate=(p)
+      @predicate = p if p && !@predicate
+    end
+
+    def bind(f = nil, &block)
+      self.class.from @predicate, self._bind((f || block))
     end
   end
 
@@ -25,12 +47,7 @@ module Categoric
   class Left < Either; end
 
   def Either(predicate, value = nil, &block)
-    if value || block
-      nvalue = block ? block.call : value
-      Either.from(predicate.call(nvalue), nvalue)
-    else
-      ->(value = nil, &block) { Either(predicate, value, &block) }
-    end
+    Either.from predicate, value, &block
   end
 
   def Right(value = nil)
