@@ -9,33 +9,20 @@ module Categoric
     end
 
     def right?
-      false
+      self.is_a? Right
     end
 
     def left?
-      false
+      self.is_a? Left
     end
-  end
 
-  class Right < Either
     def any?
-      true
-    end
-
-    def right?
-      true
+      self.right?
     end
   end
 
-  class Left < Either
-    def any?
-      true
-    end
-
-    def left?
-      true
-    end
-  end
+  class Right < Either; end
+  class Left < Either; end
 
   def Either(predicate, value = nil, &block)
     nvalue = block ? block.call : value
