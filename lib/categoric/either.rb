@@ -25,8 +25,12 @@ module Categoric
   class Left < Either; end
 
   def Either(predicate, value = nil, &block)
-    nvalue = block ? block.call : value
-    Either.from(predicate.call(nvalue), nvalue)
+    if value || block
+      nvalue = block ? block.call : value
+      Either.from(predicate.call(nvalue), nvalue)
+    else
+      ->(value = nil, &block) { Either(predicate, value, &block) }
+    end
   end
 
   def Right(value = nil)

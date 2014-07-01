@@ -14,6 +14,8 @@ describe Categoric::Either do
     it { expect(Either(->(n) { n > 0 }, -2)).to eq Left(-2) }
     it { expect(Either(->(n) { n > 0 }) { 2 + 2 }).to eq Right(4) }
     it { expect(Either(->(n) { n > 0 }) { -2 * 2}).to eq Left(-4) }
+    it { expect(Either(->(n) { n > 0 }).call(2)).to eq Right(2) }
+    it { expect(Either(->(n) { n > 0 }).call(-2)).to eq Left(-2) }
     it { expect(match_class Either(->(n) { n > 0 }, 2)).to eq :right }
     it { expect(match_class Either(->(n) { n > 0 }, -2)).to eq :left }
   end
@@ -36,5 +38,10 @@ describe Categoric::Either do
   describe '#left?' do
     it { expect(Either(->(n) { n > 0 }, 2).left?).to be false }
     it { expect(Either(->(n) { n > 0 }, -2).left?).to be true }
+  end
+
+  describe '#any?' do
+    it { expect(Either(->(n) { n > 0 }, 2).right?).to be true }
+    it { expect(Either(->(n) { n > 0 }, -2).right?).to be false }
   end
 end
