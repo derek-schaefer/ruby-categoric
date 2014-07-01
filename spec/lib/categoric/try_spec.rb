@@ -1,12 +1,21 @@
 require 'spec_helper'
 
 describe Categoric::Try do
+  def match_class(t)
+    case t
+    when Success then :success
+    when Failure then :failure
+    end
+  end
+
   describe 'Try' do
     it { expect(Try(2)).to eq Success(2) }
     it { expect(Try(nil)).to eq Success() }
     it { expect(Try(TypeError.new)).to eq Failure(TypeError.new) }
     it { expect(Try(->{ 1 + 1 })).to eq Success(2) }
     it { expect(Try(->{ 1 + nil })).to eq Failure(TypeError.new) }
+    it { expect(match_class Try(2)).to eq :success }
+    it { expect(match_class Try(TypeError.new)).to eq :failure }
   end
 
   describe 'Success' do
@@ -49,6 +58,16 @@ describe Categoric::Try do
   describe '#empty?' do
     it { expect(Success(42).empty?).to be false }
     it { expect(Failure(TypeError.new).empty?).to be true }
+  end
+
+  describe '#success?' do
+    it { expect(Success(42).success?).to be true }
+    it { expect(Failure(TypeError.new).success?).to be false }
+  end
+
+  describe '#failure?' do
+    it { expect(Success(42).failure?).to be false }
+    it { expect(Failure(TypeError.new).failure?).to be true }
   end
 
   describe '#bind' do

@@ -4,7 +4,7 @@ module Categoric
     extend  Monad::ClassMethods
 
     def self.from(f)
-      if f.is_a? Proc
+      if f.is_a?(Proc)
         begin
           value = f.call
           if value.class <= self then self.from value
@@ -18,19 +18,23 @@ module Categoric
         Success.join f
       end
     end
-  end
 
-  class Success < Try
+    def success?
+      self.is_a? Success
+    end
+
+    def failure?
+      self.is_a? Failure
+    end
+
     def any?
-      true
+      self.success?
     end
   end
+
+  class Success < Try; end
 
   class Failure < Try
-    def any?
-      false
-    end
-
     def ==(other)
       other.is_a?(self.class) && (other._ == @value || other._.is_a?(@value.class))
     end
